@@ -1,0 +1,198 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema de Entrevistas{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --azul-principal: #141C3C;
+            --laranja-principal: #FF742E;
+            --branco-fundo: #F2F3F5;
+        }
+
+        body {
+            background-color: var(--branco-fundo);
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar (Topo) */
+        .navbar {
+            background-color: var(--azul-principal) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-custom{
+            min-height: 90px;
+        }
+        .navbar-brand-title{
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .navbar-logo{
+            height: 100px;
+            width: auto;
+            margin-right: 12px;
+            border-radius: 5px;
+        }
+
+        /* Container estilo "Cartão" branco */
+        .main-card {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        /* Botão Laranja Personalizado */
+        .btn-laranja {
+            background-color: var(--laranja-principal);
+            color: white;
+            border: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn-laranja:hover {
+            background-color: #e66320;
+            color: white;
+        }
+
+        /* Estilização dos Labels do Formulário */
+        .form-label {
+            color: var(--azul-principal);
+            font-weight: 600;
+        }
+
+        /* Rodapé fixo no final se a página for curta */
+        footer {
+            margin-top: auto;
+        }
+
+        .navbar-inner {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+        }
+        .navbar-title {
+            flex: 1;
+            text-align: center;
+        }
+        .navbar-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+        }
+        @media (max-width: 768px) {
+        .navbar-custom {
+            min-height: auto;
+            padding: 12px 0;
+        }
+        .navbar-logo {
+            height: 60px;
+            margin-right: 0;
+            margin-bottom: 8px;
+        }
+        .navbar-brand-title {
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .main-card {
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .table-responsive {
+            font-size: 0.9rem;
+        }
+        .btn {
+            width: 100%;
+        }
+        .d-flex.gap-2.position-absolute.end-0 {
+            position: static !important;
+            width: 100%;
+            justify-content: center;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .navbar-inner {
+            flex-direction: column;
+            align-items: center;
+        }
+        .navbar-title {
+            text-align: center;
+        }
+        .navbar-actions {
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .navbar-actions .btn {
+            width: auto;
+        }
+    }
+    </style>
+    <script>
+        function maskCPF(value) {
+            return value
+                .replace(/\D/g, '')
+                .replace(/(\d{3})(\d)/, '$1.$2')
+                .replace(/(\d{3})(\d)/, '$1.$2')
+                .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
+                .slice(0, 14);
+        }
+
+        function maskPhone(value) {
+            return value
+                .replace(/\D/g, '')
+                .replace(/(\d{2})(\d)/, '($1) $2')
+                .replace(/(\d{5})(\d{1,4})$/, '$1-$2')
+                .slice(0, 15);
+        }
+
+        document.addEventListener('input', (e) => {
+            if (e.target.name === 'cpf') {
+                e.target.value = maskCPF(e.target.value);
+            }
+            if (e.target.name === 'telefone') {
+                e.target.value = maskPhone(e.target.value);
+            }
+        });
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary navbar-custom">
+        <div class="container navbar-inner">
+            <img src="{% static 'img/logo-empresa.png' %}" alt="Logo da Empresa" class="navbar-logo">
+            <span class="navbar-brand mb-0 h1 navbar-brand-title navbar-title">Sistema de Inscrição de Candidatos</span>
+            <div class="navbar-actions">
+                <a href="{% url 'criar_vaga' %}" class="btn btn-laranja">Início</a>
+                <a href="{% url 'login_rh' %}" class="btn btn-laranja">Login RH</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

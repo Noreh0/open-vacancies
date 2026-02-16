@@ -1,0 +1,62 @@
+{% extends "vagasAbertas/base.html" %}
+{% block title %}Vagas{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Vagas (RH)</h2>
+    <a href="{% url 'criar_vaga' %}" class="btn btn-laranja">Nova Vaga</a>
+</div>
+
+<form method="get" class="row g-3 mb-4">
+    <div class="col-auto">
+        <label class="form-label">Filtrar por Status:</label>
+    </div>
+    <div class="col-auto">
+        <select name="status" class="form-select">
+            <option value="">Todos</option>
+            <option value="em_analise" {% if filtro_status == 'em_analise' %}selected{% endif %}>Em Análise</option>
+            <option value="aprovado" {% if filtro_status == 'aprovado' %}selected{% endif %}>Aprovado</option>
+            <option value="rejeitado" {% if filtro_status == 'rejeitado' %}selected{% endif %}>Rejeitado</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-laranja">Filtrar</button>
+        <a href="{% url 'listar_vagas' %}" class="btn btn-secondary">Limpar</a>
+    </div>
+</form>
+
+<div class="main-card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Vaga</th>
+                <th>Departamento</th>
+                <th>Status</th>
+                <th>Ativa</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vaga in vagas %}
+            <tr>
+                <td>{{ vaga.nome_vaga }}</td>
+                <td>{{ vaga.get_abertura_para_o_departamento_display }}</td>
+                <td>{{ vaga.get_status_display }}</td>
+                <td>{% if vaga.ativa %}Sim{% else %}Não{% endif %}</td>
+                <td class="d-flex gap-1 flex-wrap">
+                    <a href="{% url 'editar_vaga' vaga.id %}" class="btn btn-sm btn-secondary">Editar</a>
+                    <a href="{% url 'avaliar_vaga' vaga.id %}" class="btn btn-sm btn-laranja">Avaliar</a>
+                    <a href="{% url 'aprovar_vaga' vaga.id %}" class="btn btn-sm btn-success">Aprovar</a>
+                    <a href="{% url 'rejeitar_vaga' vaga.id %}" class="btn btn-sm btn-danger">Rejeitar</a>
+                </td>
+                <td>
+                    <a href="{% url 'excluir_vaga' vaga.id %}" class="btn btn-sm btn-danger">Excluir</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">Nenhuma vaga cadastrada.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

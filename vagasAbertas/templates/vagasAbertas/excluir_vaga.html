@@ -1,0 +1,13 @@
+{% extends "vagasAbertas/base.html" %}
+{% block title %}Excluir Vaga{% endblock %}
+{% block content %}
+<div class="main-card">
+    <h4>Excluir Vaga</h4>
+    <p>Tem certeza que deseja excluir a vaga <strong>{{ vaga.nome_vaga }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <a href="{% url 'painel_rh' %}" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-danger">Excluir</button>
+    </form>
+</div>
+{% endblock %}

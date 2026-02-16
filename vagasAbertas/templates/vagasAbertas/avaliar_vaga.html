@@ -1,0 +1,53 @@
+{% extends "vagasAbertas/base.html" %}
+{% block title %}Avaliar Vaga{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="main-card">
+            <h4 class="mb-3">Avaliar Vaga</h4>
+
+            <div class="mb-4">
+                <h5>Detalhes da Vaga</h5>
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Gestor:</strong> {{ vaga.nome_gestor }}</li>
+                    <li class="list-group-item"><strong>Departamento:</strong> {{ vaga.get_abertura_para_o_departamento_display }}</li>
+                    <li class="list-group-item"><strong>Nome da Vaga:</strong> {{ vaga.nome_vaga }}</li>
+                    <li class="list-group-item"><strong>Data de Início:</strong> {{ vaga.data_inicio|date:"d/m/Y" }}</li>
+                    <li class="list-group-item"><strong>Quantidade:</strong> {{ vaga.quantidades_de_vagas }}</li>
+                    <li class="list-group-item"><strong>Motivo:</strong> {{ vaga.motivo_vaga }}</li>
+                    <li class="list-group-item"><strong>Substituto:</strong> {{ vaga.nome_do_substituido }}</li>
+                    <li class="list-group-item"><strong>Sexo:</strong> {{ vaga.get_sexo_display }}</li>
+                    <li class="list-group-item"><strong>Escolaridade:</strong> {{ vaga.get_escola_display }}</li>
+                    <li class="list-group-item"><strong>Observação:</strong> {{ vaga.observacao }}</li>
+                    <li class="list-group-item"><strong>Status Atual:</strong> {{ vaga.get_status_display }}</li>
+                </ul>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <h5 class="mb-3">Parecer RH</h5>
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">
+                            {{ field.label }}
+                            {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                        </label>
+                        {{ field }}
+                        {% if field.errors %}<div class="text-danger">{{ field.errors }}</div>{% endif %}
+                    </div>
+                {% endfor %}
+
+                <div class="d-flex justify-content-between flex-wrap gap-2">
+                    <a href="{% url 'painel_rh' %}" class="btn btn-secondary">Voltar</a>
+
+                    <div class="d-flex gap-2">
+                        <button name="acao" value="aprovar" class="btn btn-success">Aprovar</button>
+                        <button name="acao" value="rejeitar" class="btn btn-danger">Rejeitar</button>
+                        <button name="acao" value="salvar" class="btn btn-laranja">Salvar Avaliação</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
